@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>一发制胜 · 全书导读</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="一发制胜">
+<meta name="theme-color" content="#F7F5F0">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<style>
+:root{
+  --bg:#F7F5F0; --ink:#1A1A1A; --dim:#8A857C; --line:rgba(26,26,26,.14);
+  --red:#C8102E; --card:#FFFFFF;
+  --sans:"Helvetica Neue","Avenir Next","PingFang SC","Microsoft YaHei",sans-serif;
+  --disp:"Arial Black","Helvetica Neue","PingFang SC",sans-serif;
+  --serif:"Georgia","Songti SC","STSong",serif;
+  --mono:ui-monospace,"Courier New",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);max-width:640px;margin:0 auto;padding:0 20px 100px;-webkit-font-smoothing:antialiased}
+header{padding:48px 0 6px}
+.kick{font-family:var(--mono);font-size:10px;letter-spacing:.32em;color:var(--dim);text-transform:uppercase}
+/* 封面 */
+.cover{width:min(300px,74vw);aspect-ratio:145/210;margin:24px auto 0;background:#FFFFFF;border:1px solid rgba(26,26,26,.2);border-radius:4px;box-shadow:0 20px 50px rgba(26,26,26,.16),0 3px 10px rgba(26,26,26,.08);position:relative;display:flex;flex-direction:column;padding:11% 10%;overflow:hidden}
+.cover::after{content:"";position:absolute;inset:0;background:radial-gradient(110% 70% at 50% 92%, rgba(200,16,46,.05), transparent 60%);pointer-events:none}
+.cover .au{font-family:var(--sans);font-weight:800;font-size:clamp(15px,4.6vw,20px);letter-spacing:.04em}
+.cover .au small{display:block;font-family:var(--mono);font-weight:400;font-size:8.5px;letter-spacing:.14em;color:var(--dim);margin-top:5px}
+.cover .big{font-family:var(--disp);font-size:min(50px,12.4vw);white-space:nowrap;letter-spacing:.01em;line-height:1.02;margin-top:12%;color:#1A1A1A}
+.cover .st{font-family:var(--sans);font-weight:800;font-size:clamp(13px,4vw,17.5px);color:var(--red);letter-spacing:.06em;margin-top:6%}
+.cover .en{margin-top:auto;font-family:var(--serif);font-style:italic;font-size:clamp(9px,2.8vw,12px);letter-spacing:.16em;color:var(--dim)}
+.bookmeta{margin-top:28px;text-align:center}
+.bookmeta .tag{display:inline-block;font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--red);border:1px solid rgba(200,16,46,.4);border-radius:99px;padding:3px 12px;margin-bottom:12px}
+.bookmeta h1{font-family:var(--disp);font-size:21px;letter-spacing:.03em}
+.bookmeta p{font-size:12.5px;color:var(--dim);margin-top:7px;line-height:1.9}
+/* 进度 */
+.prog{display:flex;align-items:center;gap:12px;margin:26px 0 4px;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--dim)}
+.prog .bar{flex:1;height:2px;background:var(--line);border-radius:2px;overflow:hidden}
+.prog .bar i{display:block;height:100%;background:var(--red);width:0;transition:width .5s ease}
+/* 章节 */
+.ch{margin-top:6px}
+.ch-h{display:flex;align-items:center;gap:14px;padding:17px 2px;border-bottom:1px solid var(--line);cursor:pointer}
+.ch-h .no{font-family:var(--mono);font-size:11px;color:var(--dim);width:30px;flex:none;transition:color .3s}
+.ch-h .body{flex:1;min-width:0}
+.ch-h .t{font-family:var(--disp);font-size:15.5px;letter-spacing:.02em}
+.ch-h .s{font-size:11px;color:var(--dim);margin-top:3px;letter-spacing:.05em}
+.ch-h .pg{font-family:var(--mono);font-size:9.5px;color:var(--dim);flex:none}
+.ch.done .no{color:var(--red)}
+.ch.done .pg{color:var(--red)}
+/* 阅读层 */
+.reader{position:fixed;inset:0;z-index:900;background:var(--bg);transform:translateY(102%);transition:transform .42s cubic-bezier(.32,1,.38,1);overflow-y:auto;padding-bottom:60px}
+.reader.show{transform:none}
+.r-top{position:sticky;top:0;background:linear-gradient(var(--bg) 82%,transparent);padding:18px 20px 12px;display:flex;align-items:center;justify-content:space-between;z-index:5;max-width:640px;margin:0 auto}
+.r-back{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;color:var(--dim);background:none;border:1px solid var(--line);border-radius:99px;padding:8px 16px;cursor:pointer}
+.r-no{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--red)}
+.r-in{max-width:640px;margin:0 auto;padding:8px 22px 0}
+.r-t{font-family:var(--disp);font-size:25px;margin:10px 0 6px;line-height:1.3}
+.r-s{font-size:13px;color:var(--dim);letter-spacing:.06em;margin-bottom:20px}
+.r-p{font-size:14.5px;line-height:2.1;color:#333;margin-bottom:16px}
+.r-p b{color:var(--ink)}
+.r-quote{font-family:var(--serif);font-style:italic;font-size:16.5px;line-height:1.85;color:#1A1A1A;border-left:3px solid var(--red);padding:4px 0 4px 16px;margin:22px 0}
+.r-h{font-family:var(--mono);font-size:10px;letter-spacing:.28em;color:var(--red);margin:28px 0 12px}
+.list li{font-size:13.5px;line-height:2.05;color:#333;list-style:none;padding-left:20px;position:relative}
+.list li::before{content:"—";position:absolute;left:0;color:var(--red)}
+.mark-btn{display:block;width:100%;margin:32px 0 8px;padding:15px;border-radius:99px;border:none;background:var(--ink);color:var(--bg);font-family:var(--sans);font-weight:700;font-size:14.5px;letter-spacing:.14em;cursor:pointer}
+.mark-btn.did{background:none;border:1px solid var(--red);color:var(--red)}
+.r-nav{display:flex;gap:10px;margin-top:12px}
+.r-nav button{flex:1;padding:13px;border-radius:12px;border:1px solid var(--line);background:none;color:var(--dim);font-family:var(--sans);font-size:12.5px;letter-spacing:.1em;cursor:pointer}
+.r-nav button:disabled{opacity:.3}
+/* 徽章 */
+.badge{position:fixed;inset:0;z-index:950;background:rgba(26,26,26,.66);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .35s;padding:24px}
+.badge.show{opacity:1;pointer-events:auto}
+.badge-card{background:#fff;border:2px solid var(--red);border-radius:16px;max-width:330px;width:100%;padding:36px 26px;text-align:center;box-shadow:0 0 60px rgba(200,16,46,.14)}
+.badge-card .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.3em;color:var(--red)}
+.badge-card .big{font-family:var(--disp);font-size:27px;margin:13px 0 10px;line-height:1.25}
+.badge-card p{font-size:12.5px;color:var(--dim);line-height:1.95}
+footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);font-family:var(--mono);font-size:9.5px;color:var(--dim);line-height:2.1;letter-spacing:.08em}
+</style>
+</head>
+<body>
+<header>
+  <div class="kick">NOVAK DJOKOVIC · SERVE TO WIN</div>
+  <div class="cover">
+    <div class="au">德约科维奇<small>NOVAK DJOKOVIC</small></div>
+    <div class="big">一发制胜</div>
+    <div class="st">我的14天<br>身心逆转计划</div>
+    <div class="en">SERVE TO WIN</div>
+  </div>
+  <div class="bookmeta">
+    <span class="tag">书系 · 全书导读</span>
+    <h1>一发制胜</h1>
+    <p>诺瓦克 · 德约科维奇 著<br>从澳网中途退赛到世界第一，改变他的不是更刻苦，而是吃对了</p>
+  </div>
+  <div class="prog">
+    <span id="pTxt">导读 0 / 9</span>
+    <div class="bar"><i id="pBar"></i></div>
+  </div>
+</header>
+<div class="ch" id="ch"></div>
+<footer>/// 世界第一的14天逆转 · 北京联合出版公司 · 郭政皓 刘怡伶 译<br>/// 导读进度保存在本机 · 建议配合原书食用</footer>
+<div class="reader" id="reader"></div>
+<div class="badge" id="badge">
+  <div class="badge-card">
+    <div class="k">READING COMPLETE</div>
+    <div class="big">从今天起，<br>吃得像冠军。</div>
+    <p>九段脉络全部读完。<br>接下来 14 天，轮到你自己发球。</p>
+    <div style="margin-top:16px"><span class="r-back" style="pointer-events:auto" onclick="document.getElementById('badge').classList.remove('show')">收下</span></div>
+  </div>
+</div>
+<script>
+const CH = [
+{no:"01", t:"澳网崩溃", s:"2010 · 事情坏到不能再坏", pg:"序幕",
+ p:["2010 年 1 月，澳网四分之一决赛。世界第四的德约科维奇在决胜盘中途突然呕吐、瘫坐场边，被迫退赛。这已经是老毛病——过去几年，他在关键局里反复出现体力断电、呼吸急促、注意力涣散。",
+   "他是全巡回赛公认训练最刻苦的球员之一，却总在最重要的比赛里被自己的身体背叛。赛后他说出那句贯穿全书的话："],
+ q:"「我不是输给对手，我是输给了自己。」",
+ p2:["一位医生朋友看过比赛录像后问他：你有没有想过，问题不在训练，而在你吃进嘴里的东西？"]},
+{no:"02", t:"一块面包的实验", s:"转折 · 麸质过敏浮出水面", pg:"发现",
+ p:["医生切托耶维奇用「肌肉生物反馈测试」给他做了食物耐受检查：麸质——就是小麦、大麦、黑麦里的那组蛋白——是嫌疑最大的元凶。",
+   "德约的第一反应几乎是抗拒：我练了二十年球，靠碳水化合物撑着，你不让我吃面包？但当他放下麸质、开始吃小米粥和藜麦，身体给出了答案："],
+ q:"清晨醒来，第一次感觉身体是轻盈的。",
+ p2:["午后犯困消失了，睡得更沉，比赛里的专注能撑满全场。那个总在关键时刻断电的人，续航时间忽然变了。"]},
+{no:"03", t:"你也可以试 14 天", s:"方法 · 给普通人的无麸质实验", pg:"计划",
+ p:["这本书不是让所有人都永别面包，而是提出一个可以亲测的实验：花 14 天，把饮食里的麸质完全拿掉，观察自己的身体——睡眠、皮肤、精力、情绪。",
+   "替代方案很简单：早餐用小米粥、荞麦、无麸质麦片替代面包麦片；主食转向糙米、藜麦、红薯；烘焙用杏仁粉、椰子粉。两周后把麸质加回来，你会清晰感觉到差别——如果有的话。"],
+ q:"「14 天，换一种身体的可能性，这笔交易很划算。」",
+ p2:["书里附了完整的 14 天三餐食谱：早餐丰盛（蛋白质+水果+无麸质谷物）、午餐吃饱、晚餐吃轻。不是节食，是把每一餐当成补给来安排。"]},
+{no:"04", t:"吃什么", s:"食谱 · 冠军餐盘的结构", pg:"食谱",
+ p:["14 天计划里的每一餐都遵循同一个结构，与其抄食谱，不如记结构：",
+   "蛋白质打底——鸡蛋、鱼、禽肉、精益红肉；绿叶与彩蔬——每天至少一份沙拉；无麸质碳水——小米、藜麦、糙米、荞麦；好的脂肪——牛油果、橄榄油、坚果种子；甜味来自水果与蜂蜜，而不是糖。"],
+ h:"几顿代表性冠军餐",
+ list:["早餐：无麸质麦片 + 杏仁奶 + 新鲜莓果","午餐：鸡胸或鲜鱼 + 大份沙拉 + 藜麦","晚餐：清蒸蔬菜 + 少量蛋白，睡前不留负担","加餐：一把杏仁、腰果或南瓜子"]},
+{no:"05", t:"饮食守则", s:"原则 · 比食谱更长久的日常", pg:"守则",
+ p:["食谱会吃完，守则留下。书里反复出现的日常原则："],
+ list:["晨起第一件事：喝一杯常温水，唤醒身体","每天至少一份绿色沙拉","尽量避开精制糖——想吃甜的，用蜂蜜、椰糖、水果","零食换成坚果和种子","乳制品减到最少，用杏仁奶、米奶替代","睡前两小时不再进食","睡够七小时——睡眠是最便宜的恢复手段"]},
+{no:"06", t:"冠军的一天", s:"时程 · 一整天怎么排", pg:"训练",
+ p:["饮食之外，书里给了 1 个「整天训练时程」——世界级运动员的一天长这样："],
+ list:["晨起温水 → 超级早餐","上午：网球专项训练（技术+击球）","午餐 + 认真午休","下午：按摩、滚轮恢复 → 第二段训练","傍晚：瑜伽拉伸 → 晚餐","晚间：放松、阅读，十点前后入睡","——规律本身就是竞争力"]},
+{no:"07", t:"身体的保养", s:"装备 · 9 热身 / 9 滚轮 / 4 瑜伽", pg:"保养",
+ p:["书里最实操的部分：9 种动态热身动作、9 招泡沫轴滚轮按摩、4 式瑜伽动作——全部配图解。",
+   "他的理念：身体是精密仪器，训练是消耗，保养是投资。热身把关节唤醒，滚轮把筋膜松开，瑜伽把紧绷的地方拉长。三件小事每天做，才撑得起十年的顶级赛场。"],
+ q:"「冠军和普通人的差距，往往藏在不训练的那几个小时里。」"},
+{no:"08", t:"冠军心态", s:"内核 · 情绪也是一种营养", pg:"心态",
+ p:["身体之外，德约在书里谈得最真诚的是心：比赛里用呼吸把心率降下来——「呼吸是唯一随身携带的重置键」；赛前可视化胜利的画面，让大脑先抵达终点；把家人当作球场之外的锚，赢了不飘，输了有归处。"],
+ q:"「当你不再害怕输球，赢球才真正开始。」",
+ p2:["正念、睡眠、呼吸、感恩——这些看起来最不像训练的部分，被他列为冠军体系的一环。"]},
+{no:"09", t:"2011 封神", s:"尾声 · 逆转的证据", pg:"证明",
+ p:["改变饮食后的第一个完整赛季（2011）：十连冠开局，对纳达尔的七连胜，温网首冠，美网决赛，历史最低的世界第一积分纪录——全年 70 胜 6 负，43 连胜跨季。",
+   "所有人都问他是怎么练的。他一遍遍回答：不是练得更狠，而是终于吃对了。这本书就是那次逆转的完整说明书——从崩溃的那一天，到一发制胜。"],
+ q:"「我现在才刚刚开始变得更好。」——2011 年，登顶那天"}
+];
+const KEY="stw_read", BK="stw_badge";
+let read = JSON.parse(localStorage.getItem(KEY)||"{}");
+function save(){ localStorage.setItem(KEY, JSON.stringify(read)); }
+function render(){
+  const n = Object.values(read).filter(Boolean).length;
+  document.getElementById("pTxt").textContent = `导读 ${n} / 9`;
+  document.getElementById("pBar").style.width = (n/9*100)+"%";
+  document.getElementById("ch").innerHTML = CH.map((c,i)=>
+   `<div class="ch ${read[i]?"done":""}">
+      <div class="ch-h" onclick="openCh(${i})">
+        <span class="no">No.${c.no}</span>
+        <div class="body"><div class="t">${c.t}</div><div class="s">${c.s}</div></div>
+        <span class="pg">${read[i]?"已读 · ":""}${c.pg}</span>
+      </div>
+    </div>`).join("");
+}
+let cur=0;
+function openCh(i){
+  cur=i; const c=CH[i]; const r=document.getElementById("reader");
+  r.innerHTML = `
+   <div class="r-top"><button class="r-back" onclick="closeCh()">← 目录</button><span class="r-no">No.${c.no} · ${c.pg}</span></div>
+   <div class="r-in">
+     <div class="r-t">${c.t}</div>
+     <div class="r-s">${c.s}</div>
+     ${c.p.map(x=>`<p class="r-p">${x}</p>`).join("")}
+     ${c.q?`<div class="r-quote">"${c.q}"</div>`:""}
+     ${c.p2?`<p class="r-p">${c.p2}</p>`:""}
+     ${c.h?`<div class="r-h">/// ${c.h}</div>`:""}
+     ${c.list?`<ul class="list">${c.list.map(x=>`<li>${x}</li>`).join("")}</ul>`:""}
+     <button class="mark-btn ${read[i]?"did":""}" onclick="tg(${i})">${read[i]?"✓ 这段读过了":"读完这段"}</button>
+     <div class="r-nav">
+       <button onclick="openCh(${i-1})" ${i===0?"disabled":""}>← 上一段</button>
+       <button onclick="openCh(${i+1})" ${i===8?"disabled":""}>下一段 →</button>
+     </div>
+   </div>`;
+  r.classList.add("show"); r.scrollTop=0;
+}
+function closeCh(){ document.getElementById("reader").classList.remove("show"); render(); }
+function tg(i){
+  read[i]=true; save();
+  const b=document.querySelector(".mark-btn"); b.classList.add("did"); b.textContent="✓ 这段读过了";
+  if(Object.values(read).filter(Boolean).length===9 && !localStorage.getItem(BK)){
+    localStorage.setItem(BK,"1");
+    setTimeout(()=>document.getElementById("badge").classList.add("show"),420);
+  }
+}
+render();
+</script>
+</body>
+</html>
